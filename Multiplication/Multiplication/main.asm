@@ -65,15 +65,9 @@ bandera_negativo:
 
 mult:
 	mul r2, r3 ; Resultado en r0 maximo 81
-	ldi r19, 0x3D ;Cargamos el '=' para poder imprimir
-	call serial_transmit
 	cpi r20, 0x01 ;Significa que tenemos nos dieron en la entrada un número negativo
 	breq imprime_menos
-	mov r19, r2
-	call serial_transmit
-	rjmp stop
-	;breq  imprime_menos
-	;rjmp imprime_numero
+	rjmp imprime_numero
 
 stop:
 	call stop
@@ -84,18 +78,10 @@ imprime_menos:
 	rjmp imprime_numero
 
 imprime_numero:
-	mov r19, quo ; imprime el registro de las decenas
-	call serial_transmit ; imprime el registro de las unidades
-	mov r19, den ;ori registro, 0x30
-	call serial_transmit
-	; Antes de imprimir, convertir de numero decimal a caracter
-	rjmp reset
-
-reset: 
-	ldi r19, 0x0a
-	call serial_transmit
-	;registros de unidades y decenas, mandarlos a 0
-	rjmp start
+	mov r30, r2
+    rcall bin_ascii_converter
+    rcall print
+    rjmp stop
 
 
 ;hex to dec
@@ -120,7 +106,7 @@ divide:
 		add num, den
 		ret
 
-print: 
+print:
        ldi r16, 0x00
 	   ldi r17, 0x00
 	   ldi r18, 0x00
