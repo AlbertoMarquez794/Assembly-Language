@@ -1,12 +1,12 @@
 
-AVRASM ver. 2.2.8  C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm Wed Sep 06 13:34:46 2023
+AVRASM ver. 2.2.8  C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm Mon Sep 18 07:52:26 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm(11): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm(11): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
-                                 ;
+                                 ; Blink.asm
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -987,14 +987,13 @@ C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm(11): 
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; Blink.asm
-                                 ;
+                                 ; Este es un comentario que describe el nombre del archivo y su propósito.
                                  ; Created: 8/22/2023 1:51:09 PM
                                  ; Author : hugor
-                                 ;
-                                 
+                                 ; Estos comentarios indican la fecha de creación y el autor del código.
                                  
                                  ; Replace with your application code
+                                 ; Esto es un marcador de posición que sugiere que aquí se debe colocar el código de la aplicación real.
                                  
                                  .include "m328pdef.inc"
                                  
@@ -1040,73 +1039,80 @@ C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm(11): 
                                  #endif  /* _M328PDEF_INC_ */
                                  
                                  ; ***** END OF FILE ******************************************************
+                                 ; Esta línea incluye el archivo de definición "m328pdef.inc", que contiene definiciones de registros y constantes para el microcontrolador ATmega328P.
                                  
+                                 ; Configura el puntero de pila para el final de la RAM
 000000 e008                      ldi r16, high(ramend)
 000001 bf0e                      out sph, r16
 000002 ef0f                      ldi r16, low(ramend)
 000003 bf0d                      out spl, r16
+                                 ; Estas líneas configuran el puntero de pila (stack pointer) al final de la memoria RAM del microcontrolador ATmega328P.
                                  
 000004 e050                      ldi r21, 0x00
 000005 b954                      out ddrb, r21
 000006 9a25                      sbi ddrb, 5
 000007 9a2d                      sbi portb, 5
+                                 ; Estas líneas inicializan el registro DDRB para configurar el pin 5 (PB5) como una salida digital y luego establecen un nivel alto en ese pin utilizando el registro PORTB.
+                                 
 000008 e505                      BLK1: ldi r16, 0x55
-000009 b905                            out portb, r16
-00000a d01c                      	  rcall delay_2
-00000b ea0a                      	  ldi r16, 0xAA
-00000c b905                      	  out portb, r16
-00000d d019                      	  rcall delay_2
-00000e cff9                      	  rjmp BLK1
+000009 b905                      out portb, r16
+00000a d01c                      rcall delay_2
+00000b ea0a                      ldi r16, 0xAA
+00000c b905                      out portb, r16
+00000d d019                      rcall delay_2
+00000e cff9                      rjmp BLK1
+                                 ; Este código parpadea el pin 5 alternando entre los valores 0x55 y 0xAA utilizando registros y llamadas a la rutina de retraso "delay_2".
                                  
-                                 delay: 
-00000f ef42                           ldi r20, 0xF2
-000010 bd46                      	 out tcnt0, r20
-000011 e042                      	 ldi r20, 0b00000010
-000012 bd45                      	 out tccr0b, r20
+                                 delay:
+00000f ef42                      ldi r20, 0xF2
+000010 bd46                      out tcnt0, r20
+000011 e042                      ldi r20, 0b00000010
+000012 bd45                      out tccr0b, r20
 000013 b345                      again: in r20, tifr0
-000014 ff40                             sbrs r20, tov0
-000015 cffd                      	   rjmp again
-000016 e040                      	   ldi r20, 0x00
-000017 bd45                      	   out tccr0b, r20
-000018 e041                      	   ldi r20, (1<<tov0)
-000019 bb45                      	   out tifr0, r20
-00001a 9508                      	   ret
-                                 	
-                                 delay_1: 
-00001b e342                           ldi r20, 50
-00001c e956                      L1:  ldi r21, 150
-00001d ef6a                      L2:  ldi r22, 250
-                                 L3: 
-00001e 0000                           nop
-00001f 0000                      	 nop
-000020 956a                      	 dec r22
-000021 f7e1                      	 brne L3
+000014 ff40                      sbrs r20, tov0
+000015 cffd                      rjmp again
+000016 e040                      ldi r20, 0x00
+000017 bd45                      out tccr0b, r20
+000018 e041                      ldi r20, (1<<tov0)
+000019 bb45                      out tifr0, r20
+00001a 9508                      ret
+                                 ; Esta es la rutina de retraso "delay" utilizando el temporizador 0 (Timer 0) del ATmega328P. Espera hasta que se desborde el temporizador.
                                  
-000022 955a                      	 dec r21
-000023 f7c9                      	 brne L2
-                                 
-000024 954a                      	 dec r20
-000025 f7b1                      	 brne L1
-000026 9508                      	 ret   
-                                 
+                                 delay_1:
+00001b e342                      ldi r20, 50
+00001c e956                      L1: ldi r21, 150
+00001d ef6a                      L2: ldi r22, 250
+                                 L3:
+00001e 0000                      nop
+00001f 0000                      nop
+000020 956a                      dec r22
+000021 f7e1                      brne L3
+000022 955a                      dec r21
+000023 f7c9                      brne L2
+000024 954a                      dec r20
+000025 f7b1                      brne L1
+000026 9508                      ret
+                                 ; Esta es otra rutina de retraso "delay_1" que realiza un retardo mediante bucles anidados.
                                  
 000027 ef4f                      delay_2: ldi r20, 0xFF
-000028 e35c                               ldi r21, 0x3C
-000029 9340 0085                          sts TCNT1H,r20
-00002b 9350 0084                 		 sts TCNT1L,r21
-00002d e040                      		 ldi r20, 0x00
-00002e e055                      		 ldi r21, 0x05
-00002f 9340 0080                 		 sts tccr1a, r20
-000031 9350 0081                 		 sts tccr1b, r21
+000028 e35c                      ldi r21, 0x3C
+000029 9340 0085                 sts TCNT1H, r20
+00002b 9350 0084                 sts TCNT1L, r21
+00002d e040                      ldi r20, 0x00
+00002e e055                      ldi r21, 0x05
+00002f 9340 0080                 sts tccr1a, r20
+000031 9350 0081                 sts tccr1b, r21
 000033 b346                      again_1: in r20, tifr1
-000034 ff40                               sbrs r20, tov1
-000035 cffd                      		 rjmp again_1
-000036 e040                      		 ldi r20, 0x00
-000037 9340 0080                 		 sts tccr1a, r20
-000039 9340 0081                 		 sts tccr1b, r20
-00003b e041                      		 ldi r20, 0x01
-00003c bb46                      		 out tifr1, r20
-00003d 9508                      		 ret
+000034 ff40                      sbrs r20, tov1
+000035 cffd                      rjmp again_1
+000036 e040                      ldi r20, 0x00
+000037 9340 0080                 sts tccr1a, r20
+000039 9340 0081                 sts tccr1b, r20
+00003b e041                      ldi r20, 0x01
+00003c bb46                      out tifr1, r20
+00003d 9508                      ret
+                                 ; Esta es la rutina de retraso "delay_2" que utiliza el temporizador 1 (Timer 1) del ATmega328P para generar un retardo.
+                                 
 
 
 RESOURCE USE INFORMATION

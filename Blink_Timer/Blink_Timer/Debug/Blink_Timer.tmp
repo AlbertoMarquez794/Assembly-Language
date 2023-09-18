@@ -1,19 +1,19 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega328P"</DEVICE>
- <WORKING_DIR>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc</FILE>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\Debug\Blink_Timer.obj</FILE>
+  <FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\Debug\Blink_Timer.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>Blink_Timer.hex</FILE>
@@ -23,14 +23,14 @@
   <FILE>Blink_Timer.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <BLK1><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>22</LINE></BLK1>
-  <delay_2><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>62</LINE></delay_2>
-  <delay><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>30</LINE></delay>
-  <again><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>35</LINE></again>
-  <delay_1><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>44</LINE></delay_1>
-  <L1><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>46</LINE></L1>
-  <L2><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>47</LINE></L2>
-  <L3><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>48</LINE></L3>
-  <again_1><FILE>C:\Users\hugor\Documents\Atmel Studio\7.0\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>70</LINE></again_1>
+  <BLK1><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>26</LINE></BLK1>
+  <delay_2><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>66</LINE></delay_2>
+  <delay><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>35</LINE></delay>
+  <again><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>40</LINE></again>
+  <delay_1><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>50</LINE></delay_1>
+  <L1><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>52</LINE></L1>
+  <L2><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>53</LINE></L2>
+  <L3><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>54</LINE></L3>
+  <again_1><FILE>C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm</FILE><LINE>74</LINE></again_1>
  </LABELS>
 </ASSEMBLER_INFO>
