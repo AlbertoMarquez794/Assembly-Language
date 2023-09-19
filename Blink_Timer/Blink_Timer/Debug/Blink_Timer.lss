@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm Mon Sep 18 07:52:26 2023
+AVRASM ver. 2.2.8  C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm Mon Sep 18 21:49:28 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Blink_Timer\Blink_Timer\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
                                  ; Blink.asm
                                  
@@ -1048,19 +1048,23 @@ C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\ma
 000003 bf0d                      out spl, r16
                                  ; Estas líneas configuran el puntero de pila (stack pointer) al final de la memoria RAM del microcontrolador ATmega328P.
                                  
-000004 e050                      ldi r21, 0x00
-000005 b954                      out ddrb, r21
-000006 9a25                      sbi ddrb, 5
-000007 9a2d                      sbi portb, 5
+                                 ; Carga 0x00 en el registro R21
+000004 e050                      ldi r21, 0x00 ; R21 = 0000 0000 (Estado inicial)
+000005 b954                      out ddrb, r21 ; Configura todos los pines del puerto B como entradas (0, inicializar los pines)
+000006 9a25                      sbi ddrb, 5 ; Configura el quinto bit del puerto B (PB5) como salida (1)
+000007 9a2d                      sbi portb, 5 ; Establece el quinto bit del puerto B (PB5) en alto para encender un LED
                                  ; Estas líneas inicializan el registro DDRB para configurar el pin 5 (PB5) como una salida digital y luego establecen un nivel alto en ese pin utilizando el registro PORTB.
-                                 
-000008 e505                      BLK1: ldi r16, 0x55
-000009 b905                      out portb, r16
-00000a d01c                      rcall delay_2
-00000b ea0a                      ldi r16, 0xAA
-00000c b905                      out portb, r16
-00000d d019                      rcall delay_2
-00000e cff9                      rjmp BLK1
+                                 BLK1:
+                                 	; Etiqueta del bucle principal
+                                 	; 0x55 (0101 0101)
+000008 e505                      	ldi r16, 0x55 ; Carga el valor 0x55 (85) en el registro R16
+000009 b905                      	out portb, r16 ; Establece los bits del puerto B según el valor en R16 (0 1 0 1 0 1 0 1)
+                                 	;Establece los bits de PBO a PB7 segun los bits de R16. 
+00000a d01c                      	rcall delay_2 ; Llama a la subrutina "delay_2" para crear un retardo
+00000b ea0a                      	ldi r16, 0xAA ; Carga el valor 0xAA en el registro R16
+00000c b905                      	out portb, r16 ; Establece los bits del puerto B según el valor en R16
+00000d d019                      	rcall delay_2 ; Llama a la subrutina "delay_2" para crear otro retardo
+00000e cff9                      	rjmp BLK1 ; Salta de nuevo a la etiqueta "BLK1" para repetir el proceso
                                  ; Este código parpadea el pin 5 alternando entre los valores 0x55 y 0xAA utilizando registros y llamadas a la rutina de retraso "delay_2".
                                  
                                  delay:
@@ -1094,23 +1098,35 @@ C:\Users\BCHAVEZM\Desktop\Otoño2023\Assembly-Language\Blink_Timer\Blink_Timer\ma
 000026 9508                      ret
                                  ; Esta es otra rutina de retraso "delay_1" que realiza un retardo mediante bucles anidados.
                                  
-000027 ef4f                      delay_2: ldi r20, 0xFF
-000028 e35c                      ldi r21, 0x3C
-000029 9340 0085                 sts TCNT1H, r20
-00002b 9350 0084                 sts TCNT1L, r21
-00002d e040                      ldi r20, 0x00
-00002e e055                      ldi r21, 0x05
-00002f 9340 0080                 sts tccr1a, r20
-000031 9350 0081                 sts tccr1b, r21
-000033 b346                      again_1: in r20, tifr1
-000034 ff40                      sbrs r20, tov1
-000035 cffd                      rjmp again_1
-000036 e040                      ldi r20, 0x00
-000037 9340 0080                 sts tccr1a, r20
-000039 9340 0081                 sts tccr1b, r20
-00003b e041                      ldi r20, 0x01
-00003c bb46                      out tifr1, r20
-00003d 9508                      ret
+                                 delay_2: ;Con bandera de desbordamiento
+000027 ef4f                      	ldi r20, 0xFF ;R20 = 255
+000028 e35c                      	ldi r21, 0x3C ;R21 = 60
+                                 	; Configuración de los registros TCNT1H y TCNT1L del Timer1/Counter1 (Temporizador/Contador1).
+                                 	;TCNT1H generalmente almacena los bits más significativos del timer 1
+                                 	;TCNT1L se almacena generalmente los bits menos significativos
+000029 9340 0085                 	sts TCNT1H, r20  ; Almacena el contenido del registro r20 en TCNT1H (parte alta).
+00002b 9350 0084                 	sts TCNT1L, r21  ; Almacena el contenido del registro r21 en TCNT1L (parte baja).
+00002d e040                      	ldi r20, 0x00   ; Carga el valor 0x00 en el registro r20.
+00002e e055                      	ldi r21, 0x05   ; Carga el valor 0x05 en el registro r21.
+                                 	; Configuración de los registros de control del Timer1/Counter1 para el modo CTC y el preescalado.
+                                 	
+                                 	;Registros de control para poder configurar el timer en modo CTC y el pre-escalado
+00002f 9340 0080                 	sts tccr1a, r20  ;tccr1a = 0x00 = 0
+000031 9350 0081                 	sts tccr1b, r21 ;tccr1b = 0x05 = 5
+                                 	;El timer se configurara para contar hacia atras desde este valor hasta cero
+                                 	;tov1 es la bandera de desbordamiento
+                                 	again_1: 
+                                 		;Todo este ciclo de ejecucion está en torno al timer 1
+000033 b346                      		in r20, tifr1 ;Registro de banderas de interrupción del Timer 1
+000034 ff40                      		sbrs r20, tov1 ;Si el bit 'TOV1' está establecido (0) no salta, en caso contrario es que ha surgido un desbordamiento  
+000035 cffd                      		rjmp again_1
+                                 		;Inicializas todo en cero para poder utilizar en algun momento
+000036 e040                      		ldi r20, 0x00
+000037 9340 0080                 		sts tccr1a, r20
+000039 9340 0081                 		sts tccr1b, r20
+00003b e041                      		ldi r20, 0x01
+00003c bb46                      		out tifr1, r20
+00003d 9508                      		ret
                                  ; Esta es la rutina de retraso "delay_2" que utiliza el temporizador 1 (Timer 1) del ATmega328P para generar un retardo.
                                  
 

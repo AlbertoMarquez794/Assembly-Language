@@ -23,21 +23,21 @@ main: call serial_init
 	ldi r16, low(ramend) ;Carga el valor bajon de la direccion de memoria RAM en r16
 	out spl, r16 ;Utiliza para apuntar a la parte baja de la pila en la memoria RAM
 
-	; Configurar el bit 5 del puerto B como salida y establecerlo en alto
+	; Configurar el bit 5 del puerto B como salida y establecerlo en alto (1) 
 	sbi ddrb, 5
 	sbi portb, 5
 
-	; Configurar el bit 4 del puerto D como salida y establecerlo en alto
+	; Configurar el bit 4 del puerto D como salida y establecerlo en alto (1)
 	sbi ddrd, 4
 	sbi portd, 4
 
 	; Cargar valores específicos en registros
 	ldi r20, 0xFF ; R20 = 255
-	ldi r21, 0x3C ; R21 = 60
+	ldi r21, 0x3C ; R21 = 60 [0011 1100]
 
 	; Almacenar los valores en los registros TCNT1H y TCNT1L del temporizador 1
-	sts TCNT1H, r20
-	sts TCNT1L, r21
+	sts TCNT1H, r20 ;TCNT1H = 255
+	sts TCNT1L, r21 ;TCNT1L = 60
 
 	; Cargar el valor 0xFD en el registro r23
 	ldi r23, 0xFD ;r23 = 253
@@ -45,16 +45,15 @@ main: call serial_init
 	; Escribir el valor en el registro TCNT0 del temporizador 0
 	out TCNT0, r23
 
-
 	ldi r16, 32          ; Cargar el valor 32 en el registro r16
 	out portb, r16       ; Escribir el valor de r16 en el registro PORTB
     ldi r16, 16          ; Cargar el valor 16 en el registro r16
     out portd, r16       ; Escribir el valor de r16 en el registro PORTD
-
+	;TCCR1A-TCCR1B, TCCR1C son registros de control del Timer1/Timer2
 	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
-	ldi r21, (1<<CS12)|(1<<CS10) ; Cargar el valor binario 00001001 en r21
+	ldi r21, (1<<CS12)|(1<<CS10) ; Cargar el valor binario 00001001 (9) en r21
 	sts TCCR1A, r20      ; Almacenar el valor de r20 en el registro TCCR1A 0
-	sts TCCR1B, r21      ; Almacenar el valor de r21 en el registro TCCR1B 5
+	sts TCCR1B, r21      ; Almacenar el valor de r21 en el registro TCCR1B 9
 
 	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
 	out TCCR0A, r20      ; Escribir el valor de r20 en el registro TCCR0A (Timer/Counter 1 Control Register A) registro para controlar el Timer/Counter1
@@ -64,14 +63,16 @@ main: call serial_init
 	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
 	ldi r20, (1<<TOIE0)  ; Cargar el valor binario 00000001 en r20
 	sts TIMSK0, r20      ; Almacenar el valor de r20 en el registro TIMSK0
-
-	;El registro TIMSK0 (Timer/Counter0 Interrupt Mask Register) es un registro de configuración utilizado 
-	;en los microcontroladores AVR, como el ATmega328P, para habilitar o deshabilitar interrupciones 
+	;TIMSK0: este registro es para activar las interrupciones. 
+	;Si el bit 0 está activo signifca que está permitido las interrupciones de overflow. 
+	;Si el bit 1 está activo, significa que cuando se compare el valor del OCR0A y TCNT0, y sean iguales, 
+	;entonces se disparará una interrupción. Igualmente si está en 1 el bit 3, ocurre lo mismo pero con el OCR0B.
 	;relacionadas con el Timer/Counter0 (Temporizador/Contador 0).
 
+	;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
 	ldi r20, (1<<TOIE1)  ; Cargar el valor binario 00000001 en r20
-	sts TIMSK1, r20      ; Almacenar el valor de r20 en el registro TIMSK1
+	sts TIMSK1, r20      ; Almacenar el valor de r20 en el registro TIMSK1, significa que el desbordamiento está activo
 	;El registro TIMSK1 (Timer/Counter1 Interrupt Mask Register) es un registro de configuración utilizado 
 	;en los microcontroladores AVR, como el ATmega328P, para habilitar o deshabilitar interrupciones 
 	;relacionadas con el Timer/Counter1 (Temporizador/Contador 0).

@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_print_interrupt\Led_print_interrupt\main.asm Mon Sep 18 11:28:15 2023
+AVRASM ver. 2.2.8  C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_interrupt\Led_interrupt\main.asm Mon Sep 18 23:08:47 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_print_interrupt\Led_print_interrupt\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_interrupt\Led_interrupt\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_print_interrupt\Led_print_interrupt\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_interrupt\Led_interrupt\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
                                  ;
                                  
@@ -987,9 +987,9 @@ C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_print_interrupt
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; Led_print_interrupt.asm
+                                 ; Led_interrupt.asm
                                  ;
-                                 ; Created: 9/14/2023 9:03:41 AM
+                                 ; Created: 9/13/2023 10:55:29 AM
                                  ; Author : hugor
                                  ;
                                  
@@ -1041,119 +1041,68 @@ C:\Users\marqu\OneDrive\Desktop\Otoño 2023\Assembly-Language\Led_print_interrupt
                                  ; ***** END OF FILE ******************************************************
                                  .org 0x00
 000000 940c 0040                      jmp main
-                                 .org OVF0addr
-000020 940c 0100                      jmp TIM0_OVF
                                  .org OVF1addr
 00001a 940c 0200                      jmp TIM1_OVF
                                  
                                  .org 0x40
-000040 940e 020a                 main: call serial_init
+000040 940e 0205                 main: call serial_init
+000042 e008                            ldi r16, high(ramend)
+000043 bf0e                            out sph, r16
+000044 ef0f                            ldi r16, low(ramend)
+000045 bf0d                            out spl, r16
                                  
-000042 e008                      	ldi r16, high(ramend) ;Carga el valor alto de la direccion de memoria RAM
-000043 bf0e                      	out sph, r16 ;Almacena el contenido de r16 en el registro SPH
-000044 ef0f                      	ldi r16, low(ramend) ;Carga el valor bajon de la direccion de memoria RAM en r16
-000045 bf0d                      	out spl, r16 ;Utiliza para apuntar a la parte baja de la pila en la memoria RAM
+000046 9a25                            sbi ddrb, 5
+000047 9a2d                            sbi portb, 5
                                  
-                                 	; Configurar el bit 5 del puerto B como salida y establecerlo en alto
-000046 9a25                      	sbi ddrb, 5
-000047 9a2d                      	sbi portb, 5
+000048 e040                      	  ldi r20, 0x00
+000049 e055                      	  ldi r21, 0x05
+00004a 9340 0080                 	  sts TCCR1A, r20
+00004c 9350 0081                 	  sts TCCR1B, r21
                                  
-                                 	; Configurar el bit 4 del puerto D como salida y establecerlo en alto
-000048 9a54                      	sbi ddrd, 4
-000049 9a5c                      	sbi portd, 4
+00004e e040                      	  ldi r20, 0x00
+00004f e041                      	  ldi r20, (1<<TOIE1)
+000050 9340 006f                 	  sts TIMSK1, r20
                                  
-                                 	; Cargar valores específicos en registros
-00004a ef4f                      	ldi r20, 0xFF ; R20 = 255
-00004b e35c                      	ldi r21, 0x3C ; R21 = 60 [0011 1100]
+000052 9478                      	  sei 
                                  
-                                 	; Almacenar los valores en los registros TCNT1H y TCNT1L del temporizador 1
-00004c 9340 0085                 	sts TCNT1H, r20
-00004e 9350 0084                 	sts TCNT1L, r21
+000053 ef4f                      	  ldi r20, 0xFF
+000054 e35c                            ldi r21, 0x3C
+000055 9340 0085                       sts TCNT1H,r20
+000057 9350 0084                       sts TCNT1L,r21
                                  
-                                 	; Cargar el valor 0xFD en el registro r23
-000050 ef7d                      	ldi r23, 0xFD ;r23 = 253
+000059 e200                            ldi r16, 32
+00005a b905                            out portb, r16
                                  
-                                 	; Escribir el valor en el registro TCNT0 del temporizador 0
-000051 bd76                      	out TCNT0, r23
+                                 here: 
+00005b 940c 005b                       jmp here
                                  
                                  
-000052 e200                      	ldi r16, 32          ; Cargar el valor 32 en el registro r16
-000053 b905                      	out portb, r16       ; Escribir el valor de r16 en el registro PORTB
-000054 e100                          ldi r16, 16          ; Cargar el valor 16 en el registro r16
-000055 b90b                          out portd, r16       ; Escribir el valor de r16 en el registro PORTD
+                                 .org 0x0200
+000200 b105                      TIM1_OVF :  in r16, portb
+000201 e210                                  ldi r17, 32
+000202 2701                      			eor r16, r17
+000203 b905                      	        out portb, r16
+000204 9518                      			reti
                                  
-000056 e040                      	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
-000057 e055                      	ldi r21, (1<<CS12)|(1<<CS10) ; Cargar el valor binario 00001001 en r21
-000058 9340 0080                 	sts TCCR1A, r20      ; Almacenar el valor de r20 en el registro TCCR1A 0
-00005a 9350 0081                 	sts TCCR1B, r21      ; Almacenar el valor de r21 en el registro TCCR1B 5
                                  
-00005c e040                      	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
-00005d bd44                      	out TCCR0A, r20      ; Escribir el valor de r20 en el registro TCCR0A (Timer/Counter 1 Control Register A) registro para controlar el Timer/Counter1
-00005e e056                      	ldi r21, (1<<CS02)|(1<<CS01) ; Cargar el valor binario 00000110 en r21
-00005f bd55                      	out TCCR0B, r21      ; Escribir el valor de r21 en el registro TCCR0B, 6
-                                 
-000060 e040                      	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
-000061 e041                      	ldi r20, (1<<TOIE0)  ; Cargar el valor binario 00000001 en r20
-000062 9340 006e                 	sts TIMSK0, r20      ; Almacenar el valor de r20 en el registro TIMSK0
-                                 
-                                 	;El registro TIMSK0 (Timer/Counter0 Interrupt Mask Register) es un registro de configuración utilizado 
-                                 	;en los microcontroladores AVR, como el ATmega328P, para habilitar o deshabilitar interrupciones 
-                                 	;relacionadas con el Timer/Counter0 (Temporizador/Contador 0).
-                                 
-000064 e040                      	ldi r20, 0x00        ; Cargar el valor 0 en el registro r20
-000065 e041                      	ldi r20, (1<<TOIE1)  ; Cargar el valor binario 00000001 en r20
-000066 9340 006f                 	sts TIMSK1, r20      ; Almacenar el valor de r20 en el registro TIMSK1
-                                 	;El registro TIMSK1 (Timer/Counter1 Interrupt Mask Register) es un registro de configuración utilizado 
-                                 	;en los microcontroladores AVR, como el ATmega328P, para habilitar o deshabilitar interrupciones 
-                                 	;relacionadas con el Timer/Counter1 (Temporizador/Contador 0).
-                                 
-000068 9478                      	sei                  ; Habilitar las interrupciones globales
-                                 
-                                 	here:
-000069 940c 0069                 		jmp here             ; Bucle infinito, salta a sí mismo repetidamente
-                                 
-                                 	.org 0x0100
-                                 	TIM0_OVF:
-000100 b105                      		in r16, portb        ; Leer el valor del registro PORTB en r16
-000101 e210                      		ldi r17, 32          ; Cargar el valor 32 en el registro r17
-000102 2701                      		eor r16, r17         ; Realizar una operación XOR entre r16 y r17
-000103 b905                      		out portb, r16       ; Escribir el resultado de vuelta en el registro PORTB
-000104 ef7d                      		ldi r23, 0xFD        ; Cargar el valor 0xFD en r23
-000105 bd76                      		out TCNT0, r23       ; Escribir el valor de r23 en el registro TCNT0
-000106 e020                      		ldi r18, 0           ; Cargar 0 en r18 (posiblemente para algún propósito futuro)
-000107 9518                      		reti                 ; Retornar de la interrupción
-                                 
-                                 	.org 0x0200
-                                 	TIM1_OVF:
-000200 b10b                      		in r16, portd        ; Leer el valor del registro PORTD en r16
-000201 e110                      		ldi r17, 16          ; Cargar el valor 16 en el registro r17
-000202 2701                      		eor r16, r17         ; Realizar una operación XOR entre r16 y r17
-000203 b90b                      		out portd, r16       ; Escribir el resultado de vuelta en el registro PORTD
-000204 9523                      		inc r18              ; Incrementar el valor en r18
-000205 6320                      		ori r18, 0x30        ; Realizar una operación OR con 0x30 en r18
-000206 2f32                      		mov r19, r18         ; Copiar el valor de r18 en r19
-000207 940e 0217                 		call serial_transmit ; Llamar a la función serial_transmit
-000209 9518                      		reti                 ; Retornar de la interrupción
-                                 
-                                 	; Inicializar la conexión serial
-                                 	serial_init:
-00020a e607                      		ldi r16, 103         ; Cargar el valor 103 en r16
-00020b 2711                      		clr r17              ; Borrar r17 (posiblemente para algún propósito futuro)
-00020c 9310 00c5                 		sts 0xc5, r17        ; Almacenar el valor de r17 en la dirección 0xc5
-00020e 9300 00c4                 		sts 0xc4, r16        ; Almacenar el valor de r16 en la dirección 0xc4
-000210 e108                      		ldi r16, (1<<4)|(1<<3) ; Cargar el valor binario 00011000 en r16
-000211 9300 00c1                 		sts 0xc1, r16        ; Almacenar el valor de r16 en la dirección 0xc1
-000213 e00e                      		ldi r16, 0b00001110  ; Cargar el valor binario 00001110 en r16
-000214 9300 00c2                 		sts 0xc2, r16        ; Almacenar el valor de r16 en la dirección 0xc2
-000216 9508                      		ret                  ; Retornar de la función
-                                 
-                                 	; Transmitir un byte almacenado en r19 por serial
-                                 	serial_transmit:
-000217 9100 00c0                 		lds r16, 0xc0        ; Leer un valor de alguna dirección específica en r16
-000219 ff05                      		sbrs r16, 5          ; Saltar si el bit 5 de r16 está en 0
-00021a cffc                      		rjmp serial_transmit ; Saltar de vuelta a serial_transmit si se cumple la condición anterior
-00021b 9330 00c6                 		sts 0xc6, r19        ; Almacenar el valor de r19 en la dirección 0xc6
-00021d 9508                      		ret                  ; Retornar de la función
+                                 			;initialise serial connection
+                                 serial_init:
+000205 e607                               ldi r16, 103
+000206 2711                               clr r17
+000207 9310 00c5                          sts 0xc5, r17
+000209 9300 00c4                          sts 0xc4, r16
+00020b e108                               ldi r16, (1<<4)|(1<<3)
+00020c 9300 00c1                          sts 0xc1, r16
+00020e e00e                               ldi r16, 0b00001110
+00020f 9300 00c2                          sts 0xc2, r16
+000211 9508                               ret
+                                 ;transmit byte stored in r19 over serial
+                                 serial_transmit:
+000212 9100 00c0                          lds r16, 0xc0
+000214 ff05                               sbrs r16, 5
+000215 cffc                               rjmp serial_transmit
+000216 9330 00c6                          sts 0xc6, r19
+000218 9508                               ret
 
 
 RESOURCE USE INFORMATION
@@ -1173,10 +1122,10 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  22 r17:   6 r18:   4 r19:   2 r20:  12 
-r21:   6 r22:   0 r23:   4 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:  17 r17:   4 r18:   0 r19:   1 r20:   7 
+r21:   4 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 7 out of 35 (20.0%)
+Registers used: 5 out of 35 (14.3%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
@@ -1184,26 +1133,26 @@ andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   2 cbi   :   0 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   0 cpse  :   0 dec   :   0 eor   :   2 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   2 inc   :   1 jmp   :   4 
-ld    :   0 ldd   :   0 ldi   :  22 lds   :   1 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  10 pop   :   0 
-push  :   0 rcall :   0 ret   :   2 reti  :   2 rjmp  :   1 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   4 sbic  :   0 sbis  :   0 
+cpi   :   0 cpse  :   0 dec   :   0 eor   :   1 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 jmp   :   3 
+ld    :   0 ldd   :   0 ldi   :  13 lds   :   1 lpm   :   0 lsl   :   0 
+lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   0 
+push  :   0 rcall :   0 ret   :   2 reti  :   1 rjmp  :   1 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  11 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  10 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+Instructions used: 15 out of 113 (13.3%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00043c    174      0    174   32768   0.5%
+[.cseg] 0x000000 0x000432    116      0    116   32768   0.4%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
